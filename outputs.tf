@@ -1,13 +1,28 @@
+output "subnets" {
+  value = {}
+}
+
+resource "null_resource" "private_subnets_creation_results" {
+  triggers = {
+    name       = "${aws_subnet.private.*.tags.Name}"
+    id         = "${aws_subnet.private.*.id}"
+    cidr_block = "${aws_subnet.private.*.cidr_block}"
+  }
+
+  count = "${length(data.aws_availability_zones.available.names) * length(var.private_subnets)}"
+}
+
+resource "null_resource" "private_subnets" {
+  triggers = {
+    name    = "${var.private_subnets[count.index]}"
+    subnets = "${slice(null_resource.private_subnets_creation_results.*.triggers, count.index * length(data.aws_availability_zones.available.names), (count.index + 1) * length(data.aws_availability_zones.available.names))}"
+  }
+
+  count = "${length(var.private_subnets)}"
+}
+
 output "private_subnets" {
-  value = ["${aws_subnet.private.*.id}"]
-}
-
-output "database_subnets" {
-  value = ["${aws_subnet.database.*.id}"]
-}
-
-output "database_subnet_group" {
-  value = "${aws_db_subnet_group.database.id}"
+  value = ["${null_resource.private_subnets.*.triggers}"]
 }
 
 output "public_subnets" {

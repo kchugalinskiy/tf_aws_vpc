@@ -42,9 +42,6 @@ Outputs
 =======
 
  - `vpc_id` - does what it says on the tin
- - `private_subnets` - list of private subnet ids
- - `public_subnets` - list of public subnet ids
- - `database_subnets` - list of database subnets ids
  - `database_subnet_group` - db subnet group name
  - `public_route_table_ids` - list of public route table ids
  - `private_route_table_ids` - list of private route table ids

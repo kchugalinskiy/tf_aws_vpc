@@ -1,25 +1,28 @@
-variable "name" {}
-
-variable "cidr" {}
-
-variable "region" {
-  type = "string"
+variable "name" {
+  default = "test"
 }
 
-variable "public_subnets" {
-  description = "A list of public subnets inside the VPC."
-  default     = []
+variable "cidr" {
+  default = "10.0.0.0/16"
+}
+
+variable "region" {
+  type    = "string"
+  default = "us-east-1"
+}
+
+variable "public_subnet" {
+  type = "map"
+
+  default = {
+    map_public_ip_on_launch = true
+  }
 }
 
 variable "private_subnets" {
-  description = "A list of private subnets inside the VPC."
-  default     = []
-}
-
-variable "database_subnets" {
   type        = "list"
-  description = "A list of database subnets"
-  default     = []
+  description = "Name of subnets to be generated. If one adds new subnet, it should be appended to the end of the list"
+  default     = ["private"]
 }
 
 variable "enable_dns_hostnames" {
@@ -34,11 +37,6 @@ variable "enable_dns_support" {
 
 variable "enable_nat_gateway" {
   description = "should be true if you want to provision NAT Gateways for each of your private networks"
-  default     = false
-}
-
-variable "create_database_subnets" {
-  description = "should be false if you do not want to create subnets for databases"
   default     = false
 }
 
